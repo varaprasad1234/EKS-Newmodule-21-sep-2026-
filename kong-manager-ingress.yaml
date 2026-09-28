@@ -1,0 +1,21 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: kong-manager
+  namespace: kong
+  annotations:
+    konghq.com/strip-path: "true"
+spec:
+  ingressClassName: kong
+  rules:
+    - host: app.381491852311.realhandsonlabs.net
+      http:
+        paths:
+          - path: /kong-admin
+            pathType: Prefix
+            backend:
+              service:
+                name: kong-kong-manager
+                port:
+                  number: 8002
+

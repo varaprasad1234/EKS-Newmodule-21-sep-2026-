@@ -1,0 +1,40 @@
+image:
+  repository: otel/opentelemetry-collector-contrib
+
+config:
+  receivers:
+    otlp:
+      protocols:
+        grpc:
+          endpoint: 0.0.0.0:4317
+        http:
+          endpoint: 0.0.0.0:4318
+  processors:
+    batch: {}
+  exporters:
+    # Metrics -> Prometheus (remote write / scrape)
+    prometheusremotewrite:
+      endpoint: "http://prometheus-kube-prometheus-prometheus.observability:9090/api/v1/write"
+    # Logs -> Loki
+    loki:
+      endpoint: "http://loki.observability:3100/loki/api/v1/push"
+    # Traces -> Tempo
+    otlp/tempo:
+      endpoint: "tempo.observability:4317"
+      tls:
+        insecure: true
+  service:
+    pipelines:
+      metrics:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [prometheusremotewrite]
+      logs:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [loki]
+      traces:
+        receivers: [otlp]
+        processors: [batch]
+        exporters: [otlp/tempo]
+

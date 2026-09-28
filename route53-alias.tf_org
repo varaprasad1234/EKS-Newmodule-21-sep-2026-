@@ -1,0 +1,32 @@
+# Region-specific ALB hosted zone ID (auto-resolved)
+data "aws_elb_hosted_zone_id" "alb" {}
+
+# Alias record: app.<labid>.realhandsonlabs.net -> ALB
+#resource "aws_route53_record" "app" {
+#  zone_id = local.lab_zone_id
+#  name    = local.app_hostname
+#  type    = "A"
+
+  alias {
+    # Read directly from the managed ingress resource's status
+    name                   = kubernetes_ingress_v1.kong_proxy.status[0].load_balancer[0].ingress[0].hostname
+    zone_id                = data.aws_elb_hosted_zone_id.alb.id
+    evaluate_target_health = true
+  }
+
+  # Explicitly wait for the ingress (and its ALB) to be fully ready
+  depends_on = [kubernetes_ingress_v1.kong_proxy]
+}
+
+output "app_url" {
+  value = var.enable_tls ? "https://${local.app_hostname}" : "http://${local.app_hostname}"
+}
+
+output "lab_domain" {
+  value = local.lab_domain
+}
+
+output "alb_dns_name" {
+  value = try(kubernetes_ingress_v1.kong_proxy.status[0].load_balancer[0].ingress[0].hostname, "pending")
+}
+

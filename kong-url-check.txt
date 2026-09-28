@@ -1,0 +1,59 @@
+cat <<'EOF' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curltest
+  namespace: kong
+spec:
+  restartPolicy: Never
+  containers:
+  - name: curl
+    image: curlimages/curl
+    command: ["sh", "-c"]
+    args:
+      - |
+        echo "=== Direct httpbin ==="
+        curl -s -m 10 http://httpbin.demo.svc.cluster.local/get
+        echo ""
+        echo "=== Through Kong /api/get ==="
+        curl -s -m 10 -H "Host: app.850451907344.realhandsonlabs.net" http://kong-kong-proxy.kong.svc.cluster.local/api/get
+EOF
+
+sleep 8
+kubectl logs curltest -n kong
+kubectl delete pod curltest -n kong
+
+pod/curltest created
+=== Direct httpbin ===
+
+=== Through Kong /api/get ===
+pod "curltest" deleted from kong namespace
+#############Method 2
+cat <<'EOF' | kubectl apply -f -
+apiVersion: v1
+kind: Pod
+metadata:
+  name: curltest2
+  namespace: kong
+spec:
+  restartPolicy: Never
+  containers:
+  - name: curl
+    image: curlimages/curl
+    command: ["sh", "-c"]
+    args:
+      - |
+        echo "=== DNS test ==="
+        nslookup httpbin.demo.svc.cluster.local || echo "DNS FAILED"
+        echo "=== Direct httpbin ==="
+        curl -sv -m 8 http://httpbin.demo.svc.cluster.local/get 2>&1
+        echo "=== Through Kong ==="
+        curl -sv -m 8 -H "Host: app.850451907344.realhandsonlabs.net" http://kong-kong-proxy.kong.svc.cluster.local/api/get 2>&1
+        echo "=== DONE ==="
+EOF
+sleep 30
+kubectl logs curltest2 -n kong
+kubectl delete pod curltest2 -n kong
+
+pod/curltest2 created
+

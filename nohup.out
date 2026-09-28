@@ -1,0 +1,22 @@
+Forwarding from 127.0.0.1:9090 -> 9090
+Forwarding from [::1]:9090 -> 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+Handling connection for 9090
+error: lost connection to pod
+Forwarding from 127.0.0.1:9003 -> 9003
+Forwarding from [::1]:9003 -> 9003
+error: lost connection to pod
+error: You must be logged in to the server (Unauthorized)
+Forwarding from 127.0.0.1:9003 -> 9003
+Forwarding from [::1]:9003 -> 9003
+Handling connection for 9003
+Handling connection for 9003
+E0924 14:07:49.760946   24439 portforward.go:424] "Unhandled Error" err="an error occurred forwarding 9003 -> 9003: error forwarding port 9003 to pod 730f0d2728a1a52511b1ee71c7da295d8b07d01681430ae261f30e7724f837c3, uid : failed to execute portforward in network namespace \"/var/run/netns/cni-3ac3ecb4-3d89-988f-993d-e60a624eb66a\": failed to connect to localhost:9003 inside namespace \"730f0d2728a1a52511b1ee71c7da295d8b07d01681430ae261f30e7724f837c3\", IPv4: dial tcp4 127.0.0.1:9003: connect: connection refused IPv6 dial tcp6 [::1]:9003: connect: connection refused "
+E0924 14:07:49.761339   24439 portforward.go:424] "Unhandled Error" err="an error occurred forwarding 9003 -> 9003: error forwarding port 9003 to pod 730f0d2728a1a52511b1ee71c7da295d8b07d01681430ae261f30e7724f837c3, uid : failed to execute portforward in network namespace \"/var/run/netns/cni-3ac3ecb4-3d89-988f-993d-e60a624eb66a\": failed to connect to localhost:9003 inside namespace \"730f0d2728a1a52511b1ee71c7da295d8b07d01681430ae261f30e7724f837c3\", IPv4: dial tcp4 127.0.0.1:9003: connect: connection refused IPv6 dial tcp6 [::1]:9003: connect: connection refused "
+error: lost connection to pod
